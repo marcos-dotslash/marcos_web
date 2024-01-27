@@ -42,6 +42,19 @@ export default function Home() {
       backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the transparency if needed
     },
   };
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      const message = "Your data may be lost!";
+      event.returnValue = message;
+      return message;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   // useEffect(() => {
   //   axios
@@ -138,6 +151,9 @@ export default function Home() {
             ))}
           </>
         )}
+        <button onClick={closeModal} className="p-2 bg-red-500">
+          Close Button
+        </button>
       </Modal>
     </main>
   );

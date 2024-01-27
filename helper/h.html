@@ -1,68 +1,109 @@
-<!-- footer section start -->
-<footer id="footer">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <a href="index.html"><img
-            src="https://logo-download.com/wp-content/data/images/2021/08/Levi_Strauss__Co.-Logo.png" alt=""
-            class="img-fluid logo-footer"></a>
-        <div class="footer-about">
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, </p>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Slider</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .slider {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      box-sizing: border-box;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Navigation Arrows */
+    .prev,
+    .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      padding: 16px;
+      margin-top: -22px;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      transition: 0.6s ease;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+    }
+
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover,
+    .next:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slider">
+    <div class="slides">
+      <div class="slide">
+        <img src="https://via.placeholder.com/1200x500" alt="Slide 1">
       </div>
-      <div class="col-md-3">
-        <div class="useful-link">
-          <h2>Useful Links</h2>
-          <img src="./assets/images/about/home_line.png" alt="" class="img-fluid">
-          <div class="use-links">
-            <li><a href="index.html"><i class="fa-solid fa-angles-right"></i> Home</a></li>
-            <li><a href="about.html"><i class="fa-solid fa-angles-right"></i> About Us</a></li>
-            <li><a href="gallery.html"><i class="fa-solid fa-angles-right"></i> Gallery</a></li>
-            <li><a href="contact.html"><i class="fa-solid fa-angles-right"></i> Contact</a></li>
-          </div>
-        </div>
-
+      <div class="slide">
+        <img src="https://via.placeholder.com/1200x500" alt="Slide 2">
       </div>
-      <div class="col-md-3">
-        <div class="social-links">
-          <h2>Follow Us</h2>
-          <img src="./assets/images/about/home_line.png" alt="">
-          <div class="social-icons">
-            <li><a href=""><i class="fa-brands fa-facebook-f"></i> Facebook</a></li>
-            <li><a href=""><i class="fa-brands fa-instagram"></i> Instagram</a></li>
-            <li><a href=""><i class="fa-brands fa-linkedin-in"></i> Linkedin</a></li>
-          </div>
-        </div>
-
-
+      <div class="slide">
+        <img src="https://via.placeholder.com/1200x500" alt="Slide 3">
       </div>
-      <div class="col-md-3">
-        <div class="address">
-          <h2>Address</h2>
-          <img src="./assets/images/about/home_line.png" alt="" class="img-fluid">
-          <div class="address-links">
-            <li class="address1"><i class="fa-solid fa-location-dot"></i> Kolathur ramankulam-
-              Malappuram Dt
-              Kerala 679338</li>
-            <li><a href=""><i class="fa-solid fa-phone"></i> +91 90904500112</a></li>
-            <li><a href=""><i class="fa-solid fa-envelope"></i> mail@1234567.com</a></li>
-          </div>
-        </div>
-      </div>
-
     </div>
+    <div class="prev" onclick="prevSlide()">&#10094;</div>
+    <div class="next" onclick="nextSlide()">&#10095;</div>
   </div>
 
-</footer>
-<!-- footer section end -->
-<!-- footer copy right section start -->
-<section id="copy-right">
-  <div class="copy-right-sec"><i class="fa-solid fa-copyright"></i>
-    lorem ispum lorem ispum 2022 Powerd By <a href="#">lorem ispum</a>
+  <script>
+    let currentSlide = 0;
 
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % 3;
+      updateSlider();
+    }
 
-  </div>
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + 3) % 3;
+      updateSlider();
+    }
 
-</section>
+    function updateSlider() {
+      const slides = document.querySelector('.slides');
+      const slideWidth = document.querySelector('.slide').clientWidth;
+
+      slides.style.transform = `translateX(${-currentSlide * slideWidth}px)`;
+    }
+  </script>
+
+</body>
+
+</html>
