@@ -5,11 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Modal from "react-modal";
 import Component from "@/components/Component.jsx";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-
-
-
+import toast, { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,22 +33,22 @@ export default function Home(req:any) {
   ]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const changeCodes = (
+    newHtml: string,
+    newCss: string,
+    newJs: string,
+    index: number
+  ) => {
+    setCodes((prev) => {
+      console.log(index);
 
-  const changeCodes = (newHtml:string , newCss:string ,newJs:string,index:number)=>{
-    setCodes((prev)=>{
-      console.log(index)
-      
-      prev[index].html = newHtml
-      prev[index].css = newCss
-      prev[index].js = newJs
+      prev[index].html = newHtml;
+      prev[index].css = newCss;
+      prev[index].js = newJs;
 
-      return prev
-      
-    })
-  }
-
-
-  
+      return prev;
+    });
+  };
 
   const customModalStyles = {
     content: {
@@ -66,16 +62,21 @@ export default function Home(req:any) {
       backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the transparency if needed
     },
   };
-
-  const setLocalfun = useCallback(async()=>{
-    const jsonArray = await JSON.stringify(codes); // save to localStorage using "array" 
-    localStorage.setItem('codes', jsonArray);
-    
-  },[])
   useEffect(() => {
-    setLocalfun()
-    
-  }, [codes]);
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (codes.length > 0) {
+        const message = "Your data may be lost!";
+        event.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [codes]); // Include codes in the dependency array
 
   const fetchComponentsByCategory = (index: number) => {
     // Fetch components based on the selected category
@@ -103,59 +104,85 @@ export default function Home(req:any) {
     setIsModalOpen(false);
   };
 
+  const changeComponents = (code: any) => {
+    setCodes(code);
+  };
   // console.log(codes);
 
   return (
     <main className={`${inter.className}`}>
+      <Toaster />
       <div className="w-full flex justify-center mt-5">
         <Login />
       </div>
-      <Component components={codes}  changeCodes ={changeCodes}/>
-      <div className="flex justify-center">
-        <button onClick={() => setIsModalOpen(true)} className="text-4xl">
-          {isModalOpen ? "✘" : "+"}
+      <div className="flex justify-center pt-5">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="my-5 px-4 font-semibold text-lg bg-green-500 p-2 rounded-md text-center mx-2 cursor-pointer"
+        >
+          {isModalOpen ? "Close" : "Add"}
         </button>
       </div>
+      <Component
+        components={codes}
+        changeComponents={changeComponents}
+        changeCodes={changeCodes}
+      />
 
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         style={customModalStyles}
       >
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap justify-center">
           {categories.map((category, index) => (
             <div
               key={index}
-              className="my-5 bg-blue-500 p-5 mx-2 cursor-pointer"
+              className="my-5 bg-blue-500 p-2 rounded-md text-center mx-2 cursor-pointer"
               onClick={() => openModal(index)}
             >
               {category}
             </div>
           ))}
         </div>
-
-        {/* Display components based on the selected category */}
+        <div className="absolute left-[90%] top-5 flex justify-center mt-5">
+          <button onClick={closeModal} className="p-2 rounded-md bg-red-500">
+            Close
+          </button>
+        </div>
         {selectedCategory && (
           <>
             <div className="text-white mb-3">
               Components under selected category:
             </div>
             {allComps.map((code, index) => (
-              <div key={index} className="my-5 bg-blue-500 p-5">
-                <div onClick={() => {
-                    setCodes((prevCode) => {
-                      let newCode:Code = {id:code.id , html:code.html,css:code.css,js:code.js};
-                      return [...prevCode, newCode];
-                    });
-                  }}>
-                  
-                   <iframe id="theiframe" 
-          srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html} </body><script>${code.js}</script></html>`}
-          >
-
-        </iframe>
-          </div>
-               
+              <div key={index} className="px-5">
+                <div>
+                  <iframe
+                    className="w-[70vw] h-[70vh]"
+                    srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body><script>${code.js}</script></html>`}
+                  ></iframe>
+                </div>
+                <div className="mb-5 flex justify-center">
+                  <button
+                    onClick={() => {
+                      toast.success("Component added successfully");
+                      setCodes((prevCode) => {
+                        const newCode: Code = {
+                          id: code.id,
+                          html: code.html,
+                          css: code.css,
+                          js: code.js,
+                        };
+                        return [...prevCode, newCode];
+                      });
+                    }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                  >
+                    Choose
+                  </button>
+                </div>
+                <hr className="bg-white" />
               </div>
             ))}
           </>

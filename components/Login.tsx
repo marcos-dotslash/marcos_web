@@ -29,11 +29,13 @@ const Login = () => {
     <div>
       {session?.user ? (
         <div className="flex gap-3 md:gap-5">
-          <img
-            src={session?.user?.image || "no profile"}
-            className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
-            alt="profile"
-          />
+          <a href="/profile">
+            <img
+              src={session?.user?.image || "no profile"}
+              className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
+              alt="profile"
+            />
+          </a>
           <button
             onClick={handleSignOut}
             className="black_btn text-white font-semibold"
