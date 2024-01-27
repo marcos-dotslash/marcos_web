@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Modal from "react-modal";
-import Component from "@/components/Component";
+import Component from "@/components/Component.jsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +29,34 @@ export default function Home() {
     "slider",
   ]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+
+  const changeCodes = (newHtml:string , newCss:string ,newJs:string,index:number)=>{
+    setCodes((prev)=>{
+      console.log(index)
+      
+      prev[index].html = newHtml
+      prev[index].css = newCss
+      prev[index].js = newJs
+
+      return prev
+      
+    })
+  }
+
+
+  const changeCodes = (newHtml:string , newCss:string ,newJs:string,index:number)=>{
+    setCodes((prev)=>{
+      console.log(index)
+      
+      prev[index].html = newHtml
+      prev[index].css = newCss
+      prev[index].js = newJs
+
+      return prev
+      
+    })
+  }
 
   const customModalStyles = {
     content: {
@@ -104,6 +132,7 @@ export default function Home() {
       <div className="w-full flex justify-center mt-5">
         <Login />
       </div>
+      <Component components={codes}  changeCodes ={changeCodes}/>
       <div className="flex justify-center">
         <button onClick={() => setIsModalOpen(true)} className="text-4xl">
           {isModalOpen ? "✘" : "+"}
