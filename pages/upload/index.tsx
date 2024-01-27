@@ -49,7 +49,7 @@ const UploadFiles = () => {
       }
 
       const cleanedCssContent = cssContent.replace(
-        /(body|html)\s*{[^}]*}/g,
+        /(body|html|\*)\s*{[^}]*}/g,
         ""
       );
 
