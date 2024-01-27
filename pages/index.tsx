@@ -7,10 +7,12 @@ import Modal from "react-modal";
 import Component from "@/components/Component.jsx";
 import toast, { Toaster } from "react-hot-toast";
 
+import Preview from "../components/preview"
+
 const inter = Inter({ subsets: ["latin"] });
 
 interface Code {
-  id: string;
+  _id: string;
   html: string;
   css: string;
   js: string;
@@ -21,6 +23,7 @@ export default function Home(req:any) {
   
   const [codes, setCodes] = useState<Code[]>([]);
   const [allComps, setAllComps] = useState<Code[]>([]);
+  const [showPreview , setShowPreview] = useState(false)
   const [selectedCodeIndex, setSelectedCodeIndex] = useState<number | null>(
     null
   );
@@ -37,7 +40,9 @@ export default function Home(req:any) {
     newHtml: string,
     newCss: string,
     newJs: string,
-    index: number
+    index: number,
+    _id:string
+
   ) => {
     setCodes((prev) => {
       console.log(index);
@@ -45,6 +50,7 @@ export default function Home(req:any) {
       prev[index].html = newHtml;
       prev[index].css = newCss;
       prev[index].js = newJs;
+      prev[index]._id = _id;
 
       return prev;
     });
@@ -86,6 +92,7 @@ export default function Home(req:any) {
       .post("api/crud/read_component", data)
       .then(function (response: any) {
         const { components } = response.data;
+        console.log(components);
         setAllComps(components);
         setSelectedCategory(categories[index]);
       })
@@ -110,12 +117,20 @@ export default function Home(req:any) {
   // console.log(codes);
 
   return (
-    <main className={`${inter.className}`}>
+    <>
+    {!showPreview &&
+      <main className={`${inter.className}`}>
       <Toaster />
       <div className="w-full flex justify-center mt-5">
         <Login />
       </div>
       <div className="flex justify-center pt-5">
+      <button
+          onClick={() => setShowPreview(true)}
+          className="my-5 px-4 font-semibold text-lg bg-green-500 p-2 rounded-md text-center mx-2 cursor-pointer"
+        >
+           Preview
+        </button>
         <button
           onClick={() => setIsModalOpen(true)}
           className="my-5 px-4 font-semibold text-lg bg-green-500 p-2 rounded-md text-center mx-2 cursor-pointer"
@@ -169,7 +184,7 @@ export default function Home(req:any) {
                       toast.success("Component added successfully");
                       setCodes((prevCode) => {
                         const newCode: Code = {
-                          id: code.id,
+                          _id: code._id,
                           html: code.html,
                           css: code.css,
                           js: code.js,
@@ -188,7 +203,12 @@ export default function Home(req:any) {
           </>
         )}
       </Modal>
-      <a href="/codeEditor">Next</a>
+
     </main>
+}
+    {showPreview && <Preview codes={codes}/>}
+
+    </>
+
   );
 }
