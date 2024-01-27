@@ -22,19 +22,6 @@ const Editor = ({  value, setEditorState }) => {
   return (
     <div className="editor-container">
 
-    <div style={{marginBottom: "10px"}}>
-        <label for="cars">Choose a theme: </label>
-        
-        <select name="theme" onChange={(el) => {
-            setTheme(el.target.value)
-            }}>
-            {
-                themeArray.map( theme => (
-                <option value={theme}>{theme}</option>
-                ))
-            }
-        </select>
-    </div>
 
     
         <CodeMirror

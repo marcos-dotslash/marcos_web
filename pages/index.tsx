@@ -1,10 +1,15 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Modal from "react-modal";
 import Component from "@/components/Component.jsx";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +20,9 @@ interface Code {
   js: string;
 }
 
-export default function Home() {
+export default function Home(req:any) {
+
+  
   const [codes, setCodes] = useState<Code[]>([]);
   const [allComps, setAllComps] = useState<Code[]>([]);
   const [selectedCodeIndex, setSelectedCodeIndex] = useState<number | null>(
@@ -45,18 +52,7 @@ export default function Home() {
   }
 
 
-  const changeCodes = (newHtml:string , newCss:string ,newJs:string,index:number)=>{
-    setCodes((prev)=>{
-      console.log(index)
-      
-      prev[index].html = newHtml
-      prev[index].css = newCss
-      prev[index].js = newJs
-
-      return prev
-      
-    })
-  }
+  
 
   const customModalStyles = {
     content: {
@@ -71,20 +67,15 @@ export default function Home() {
     },
   };
 
-  // useEffect(() => {
-  //   axios
-  //     .post("api/hello")
-  //     .then(function (response: any) {
-  //       const { components } = response.data;
-  //       // setAllComps(components);
-  //       setAllComps(components);
-
-  //       // setCodes(components);
-  //     })
-  //     .catch(function (error: any) {
-  //       console.log(error);
-  //     });
-  // }, []);
+  const setLocalfun = useCallback(async()=>{
+    const jsonArray = await JSON.stringify(codes); // save to localStorage using "array" 
+    localStorage.setItem('codes', jsonArray);
+    
+  },[])
+  useEffect(() => {
+    setLocalfun()
+    
+  }, [codes]);
 
   const fetchComponentsByCategory = (index: number) => {
     // Fetch components based on the selected category
@@ -125,7 +116,6 @@ export default function Home() {
           {isModalOpen ? "✘" : "+"}
         </button>
       </div>
-      <Component components={codes} />
 
       <Modal
         isOpen={isModalOpen}
@@ -152,22 +142,26 @@ export default function Home() {
             </div>
             {allComps.map((code, index) => (
               <div key={index} className="my-5 bg-blue-500 p-5">
-                <div
-                  className="homeDiv"
-                  dangerouslySetInnerHTML={{
-                    __html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body><script>${code.js}</script></html>`,
-                  }}
-                  onClick={() => {
+                <div onClick={() => {
                     setCodes((prevCode) => {
-                      return [...prevCode, code];
+                      let newCode:Code = {id:code.id , html:code.html,css:code.css,js:code.js};
+                      return [...prevCode, newCode];
                     });
-                  }}
-                ></div>
+                  }}>
+                  
+                   <iframe id="theiframe" 
+          srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html} </body><script>${code.js}</script></html>`}
+          >
+
+        </iframe>
+          </div>
+               
               </div>
             ))}
           </>
         )}
       </Modal>
+      <a href="/codeEditor">Next</a>
     </main>
   );
 }
