@@ -77,11 +77,11 @@ const Component = (props) => {
           <div key={index} className="my-5 p-5 ">
             <div className="cursor-pointer">
               <iframe
-                className="w-full"
+                // className="object-contain w-full h-full"
+                className="object-contain w-[88vw] h-[88vh]"
                 srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body>
               <script>${code.js}</script></html>`}
                 frameborder="0"
-                // style={{ pointerEvents: "none" }}
               ></iframe>
             </div>
             <div className="flex justify-between items-center my-4">
@@ -128,7 +128,6 @@ const Component = (props) => {
           <div>
             <Draggable
               axis="both"
-              // lastX=""
               handle=".handle"
               defaultPosition={{ x: 0, y: 0 }}
               position={null}
@@ -143,6 +142,14 @@ const Component = (props) => {
                     <span>.</span>
                     <span>.</span>
                     <span>.</span>
+                  </div>
+                  <div
+                    className="absolute left-[90%]"
+                    onClick={() => {
+                      setShow("hidden");
+                    }}
+                  >
+                    Close
                   </div>
                 </div>
                 <div className={` flex flex-col`}>

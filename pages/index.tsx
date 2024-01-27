@@ -153,7 +153,7 @@ export default function Home() {
               <div key={index} className="px-5">
                 <div>
                   <iframe
-                    className="w-full"
+                    className="w-[70vw] h-[70vh]"
                     srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body><script>${code.js}</script></html>`}
                   ></iframe>
                 </div>
