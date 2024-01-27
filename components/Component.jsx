@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import Editor from "./codeEditor/Editor";
 import Button from "./codeEditor/Button";
 import Draggable from "react-draggable";
+import toast, { Toaster } from "react-hot-toast";
 
 const Component = (props) => {
   const { components, changeComponents } = props;
@@ -50,6 +51,9 @@ const Component = (props) => {
       ];
       changeComponents(updatedComponents);
     }
+    toast("Component moved up", {
+      icon: "⬆️",
+    });
   };
 
   const moveElementDown = (index) => {
@@ -61,21 +65,26 @@ const Component = (props) => {
       ];
       changeComponents(updatedComponents);
     }
+    toast("Component moved down", {
+      icon: "⬇️",
+    });
   };
 
   const deleteElement = (index) => {
     const updatedComponents = [...components];
     updatedComponents.splice(index, 1);
     changeComponents(updatedComponents);
+    toast.success("Component deleted successfully");
   };
 
   return (
     <div className="container mx-auto px-16 my-10">
+      <Toaster />
       {/* <div className="grid grid-cols-1 mx-10 md:grid-cols-2 gap-10 justify-center items-center"> */}
       <div>
         {components.map((code, index) => (
-          <div key={index} className="my-5 p-5 ">
-            <div className="cursor-pointer">
+          <div key={index} className="my-5 p-5">
+            <div className="cursor-pointer flex justify-center items-center">
               <iframe
                 // className="object-contain w-full h-full"
                 className="object-contain w-[88vw] h-[88vh]"

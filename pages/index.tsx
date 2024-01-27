@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Modal from "react-modal";
 import Component from "@/components/Component.jsx";
+import toast, { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -106,6 +107,7 @@ export default function Home() {
 
   return (
     <main className={`${inter.className}`}>
+      <Toaster />
       <div className="w-full flex justify-center mt-5">
         <Login />
       </div>
@@ -167,6 +169,7 @@ export default function Home() {
                           css: code.css,
                           js: code.js,
                         };
+                        toast.success("Component added successfully");
                         return [...prevCode, newCode];
                       });
                     }}

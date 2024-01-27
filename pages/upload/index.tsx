@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import toast, { Toaster } from "react-hot-toast";
 
 // ... other imports and useState declarations ...
 
@@ -48,10 +49,14 @@ const UploadFiles = () => {
         throw new Error("CSS content is not a string.");
       }
 
-      const cleanedCssContent = cssContent.replace(
+      let cleanedCssContent = cssContent.replace(
         /(body|html|\*)\s*{[^}]*}/g,
         ""
       );
+      cleanedCssContent =
+        `a {
+        pointer-event: none;
+      }` + cleanedCssContent;
 
       const jsContent = jsFile ? await readAsText(jsFile) : "";
 
@@ -68,7 +73,11 @@ const UploadFiles = () => {
         axios
           .post("api/crud/create_component", data)
           .then(function (response) {
-            console.log("Upload successful:", response.data);
+            console.log(response.data.message);
+            if (response.data.message) toast.success(response.data.message);
+            else toast.error(response.data.error);
+
+            // console.log("Upload successful:", response.data);
           })
           .catch(function (error) {
             console.log(error);
@@ -83,6 +92,7 @@ const UploadFiles = () => {
 
   return (
     <div>
+      <Toaster />
       {session && (
         <div>
           <h1>Upload HTML, CSS, and JS Files</h1>
