@@ -13,19 +13,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       //   return res.status(401).json({ error: 'Unauthorized' });
       // }
 
-      await connectDB();
+      
+        const { htmlContent, cssContent, jsContent, category, user } = req.body;
+        await connectDB();
+        await Components.create({
+            html: htmlContent,
+            css: cssContent,
+            js: jsContent,
+            category: category,
+            user: user,
+        });
+    //   const comp = new Components();
+    //   comp.html = htmlContent;
+    //   comp.css = cssContent;
+    //   comp.js = jsContent;
+    //   comp.category = category;
+    //   comp.user = user;
 
-      const { htmlContent, cssContent, jsContent, category, user } = req.body;
-
-      const comp = new Components();
-      comp.html = htmlContent;
-      comp.css = cssContent;
-      comp.js = jsContent;
-      comp.category = category;
-      comp.user = user;
-
-      console.log(comp);
-      await comp.save();
+    //   console.log(comp);
+    //   await comp.save();
       console.log("saved");
       res.status(200).json({ message: 'Component added successfully!' });
     } catch (e) {

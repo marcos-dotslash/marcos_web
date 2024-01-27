@@ -62,9 +62,11 @@ export default function Home() {
   };
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      const message = "Your data may be lost!";
-      event.returnValue = message;
-      return message;
+      if (codes.length > 0) {
+        const message = "Your data may be lost!";
+        event.returnValue = message;
+        return message;
+      }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -72,7 +74,7 @@ export default function Home() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [codes]); // Include codes in the dependency array
 
   const fetchComponentsByCategory = (index: number) => {
     // Fetch components based on the selected category
@@ -162,6 +164,7 @@ export default function Home() {
                 <div className="mb-5 flex justify-center">
                   <button
                     onClick={() => {
+                      toast.success("Component added successfully");
                       setCodes((prevCode) => {
                         const newCode: Code = {
                           id: code.id,
@@ -169,7 +172,6 @@ export default function Home() {
                           css: code.css,
                           js: code.js,
                         };
-                        toast.success("Component added successfully");
                         return [...prevCode, newCode];
                       });
                     }}
