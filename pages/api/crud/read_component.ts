@@ -6,12 +6,13 @@ import { getSession } from 'next-auth/react';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method === 'POST') {
-         try{
+        try{
             await connectDB();
             const text = req.body;
-            const comp = await Components.find({category : text.category});
-
-            res.status(200).json({ componet: comp });
+            const ct = text.catagory;
+            const comp = await Components.find({category : ct});
+            console.log(comp)
+            res.status(200).json({ components: comp });
         }catch (e) {
             console.error(e);
             res.status(500).json({ error: "Internal Server Error" });

@@ -24,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       comp.category = category;
       comp.user = user;
 
-      await comp.save();
       console.log(comp);
+      await comp.save();
       console.log("saved");
       res.status(200).json({ message: 'Component added successfully!' });
     } catch (e) {

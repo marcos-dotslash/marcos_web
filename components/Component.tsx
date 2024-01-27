@@ -19,7 +19,7 @@ const Component = (props: any) => {
   console.log(code);
   return (
     <div>
-      <iframe srcDoc={code}></iframe>
+      <iframe className="w-full h-screen" srcDoc={code}></iframe>
       {/* <div
         className="homeDiv"
         dangerouslySetInnerHTML={{
