@@ -1,6 +1,6 @@
 import { connectDB } from '@/utils/dbconnect';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Componets from "@/models/componets";
+import Componets from "@/models/component";
 import { getSession } from 'next-auth/react';
 
 
