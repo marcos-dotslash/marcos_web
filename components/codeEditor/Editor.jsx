@@ -10,11 +10,12 @@ import { css } from '@codemirror/lang-css';
 
 const themeArray = ["abcdef", "abcdefInit"]
 
-const Editor = ({ language, value, setEditorState }) => {
+const Editor = ({  value, setEditorState }) => {
 
     const [theme, setTheme] = useState("abcdef")
 
     const handleChange = (value) => {
+        console.log(value)
         setEditorState(value);
     }
 
@@ -48,7 +49,7 @@ const Editor = ({ language, value, setEditorState }) => {
             },
           })}
         />
-    
+
 
    
     </div>

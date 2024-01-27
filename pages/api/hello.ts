@@ -11,18 +11,20 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
-  let components = [{
+  let components = [
+  {
     id: "abc",
-    html: "<h1>JAY SHREE RAM</h1>",
-    css: "h1 {color: red}",
+    html: "<h2>Hello SIr</h2>",
+    css: "h2 {color: red}",
     js: "",
   },
   {
     id: "abc",
-    html: "<h2>JAY SHREE KRISHNA</h2>",
-    css: "h2 {color: blue}",
+    html: "<h1>Hello Madam</h1>",
+    css: "h1 {color: blue}",
     js: "",
   },
+  
 ]
 
   res.status(200).json({ components });

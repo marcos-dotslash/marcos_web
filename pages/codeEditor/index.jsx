@@ -50,19 +50,17 @@ function App() {
           {
             openedEditor === 'html' ? (
               <Editor
-                language="html"
                 value={html}
                 setEditorState={setHtml}
               />
             ) : openedEditor === 'css' ? (
               <Editor
-              language="css"
+              
               value={css}
               setEditorState={setCss}
             />
             ) : (
               <Editor
-              language="javascript"
               value={js}
               setEditorState={setJs}
             />
