@@ -19,6 +19,6 @@ const componetsSchema = new Schema({
     },
 });
 
-const Components = models.Components || model("Componets", componetsSchema);
+const Components = models.Components || model("Components", componetsSchema);
 
 export default Components;

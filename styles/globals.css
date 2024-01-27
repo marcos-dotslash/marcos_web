@@ -8,6 +8,6 @@
   }
 
   .homeDiv {
-    @apply text-center flex flex-col justify-center items-center h-screen text-5xl
+    @apply text-center text-white
   }
 }

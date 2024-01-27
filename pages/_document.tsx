@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>MARCOS</title>
+        {/* <title>MARCOS</title> */}
         <link rel="icon" href="/hacker.png" />
       </Head>
       <body>
