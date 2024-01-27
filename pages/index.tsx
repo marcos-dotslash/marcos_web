@@ -4,10 +4,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Modal from "react-modal";
+import Component from "@/components/Component";
+
 const inter = Inter({ subsets: ["latin"] });
 
+interface Code {
+  id: string;
+  html: string;
+  css: string;
+  js: string;
+}
+
 export default function Home() {
-  const [codes, setCodes] = useState<any[]>([]);
+  const [codes, setCodes] = useState<Code[]>([]);
+  const [allComps, setAllComps] = useState<Code[]>([]);
   const [selectedCodeIndex, setSelectedCodeIndex] = useState<number | null>(
     null
   );
@@ -31,8 +41,10 @@ export default function Home() {
       .post("api/hello")
       .then(function (response: any) {
         const { components } = response.data;
+        // setAllComps(components);
+        setAllComps(components);
 
-        setCodes(components);
+        // setCodes(components);
       })
       .catch(function (error: any) {
         console.log(error);
@@ -47,27 +59,36 @@ export default function Home() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  console.log(codes);
+
   return (
     <main className={`${inter.className}`}>
       <div className="w-full flex justify-center mt-5">
         <Login />
       </div>
-
-      <button onClick={() => setIsModalOpen(true)} className="text-4xl">
-        {isModalOpen ? "✘" : "+"}
-      </button>
+      <Component components={codes} />
+      <div className="flex justify-center">
+        <button onClick={() => setIsModalOpen(true)} className="text-4xl">
+          {isModalOpen ? "✘" : "+"}
+        </button>
+      </div>
 
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         style={customModalStyles}
       >
-        {codes.map((code, index) => (
-          <div key={index} className="my-5">
+        {allComps.map((code, index) => (
+          <div key={index} className="my-5 bg-blue-500 p-5">
             <div
               className="homeDiv"
               dangerouslySetInnerHTML={{
-                __html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.cssCode}</style></head><body>${code.htmlCode}</body></html>`,
+                __html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body><script>${code.js}</script></html>`,
+              }}
+              onClick={() => {
+                setCodes((prevCode) => {
+                  return [...prevCode, code];
+                });
               }}
             ></div>
           </div>

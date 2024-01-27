@@ -1,6 +1,6 @@
 import { connectDB } from '@/utils/dbconnect';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Componets from "@/models/component";
+import Components from "@/models/components";
 import { getSession } from 'next-auth/react';
 
 
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          try{
             await connectDB();
             const text = req.body;
-            const comp = await Componets.find({category : text.category});
+            const comp = await Components.find({category : text.category});
 
             res.status(200).json({ componet: comp });
         }catch (e) {

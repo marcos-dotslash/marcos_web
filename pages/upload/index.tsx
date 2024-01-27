@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
+// ... other imports and useState declarations ...
+
 const UploadFiles = () => {
   const [htmlFile, setHtmlFile] = useState(null);
   const [cssFile, setCssFile] = useState(null);
   const [jsFile, setJsFile] = useState(null);
+  const [category, setCategory] = useState(""); // New state for category
   const { data: session } = useSession();
 
   const handleFileChange = (event: any, setFile: any) => {
@@ -31,24 +34,20 @@ const UploadFiles = () => {
     try {
       const htmlContent = await readAsText(htmlFile);
 
-      // Ensure htmlContent is a string
       if (typeof htmlContent !== "string") {
         throw new Error("HTML content is not a string.");
       }
 
-      // Use DOMParser to parse the HTML content
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlContent, "text/html");
-
-      // Get the content between <body> and </body> tags
       const bodyContent = doc.body.innerHTML;
 
       const cssContent = cssFile ? await readAsText(cssFile) : "";
 
       if (typeof cssContent !== "string") {
-        throw new Error("HTML content is not a string.");
+        throw new Error("CSS content is not a string.");
       }
-      // Remove CSS for body and html tags
+
       const cleanedCssContent = cssContent.replace(
         /(body|html)\s*{[^}]*}/g,
         ""
@@ -61,6 +60,7 @@ const UploadFiles = () => {
         cssContent: cleanedCssContent,
         jsContent,
         user: session?.user.id,
+        category, // Include the category field
       };
       console.log(data);
 
@@ -86,7 +86,7 @@ const UploadFiles = () => {
       {session && (
         <div>
           <h1>Upload HTML, CSS, and JS Files</h1>
-          <h3>Use external css and js files</h3>
+          <h3>Use external CSS and JS files</h3>
           <input
             type="file"
             accept=".html"
@@ -101,6 +101,14 @@ const UploadFiles = () => {
             type="file"
             accept=".js"
             onChange={(e) => handleFileChange(e, setJsFile)}
+          />
+          {/* New category input field */}
+          <input
+            type="text"
+            placeholder="Enter category"
+            value={category}
+            className="text-black"
+            onChange={(e) => setCategory(e.target.value)}
           />
           <button onClick={handleUpload}>Upload Files</button>
         </div>
