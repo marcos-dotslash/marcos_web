@@ -1,4 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Webisy
+
+Workspace for making static web pages easily for professional uses
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Getting Started](#getting-started)
+
+## Project Overview
+
+Webisy is an automated static website generator built with Next.js and Tailwind CSS. It empowers users, developers, and non-developers alike, to effortlessly create customized static websites using a range of pre-built components.
+
+## Features
+
+- **Component Library:** Choose from a variety of components to build your static website.
+- **Code Customization:** Utilize the integrated code editor to tailor the generated code to your preferences.
+- **Next.js Integration:** Leverage the power of Next.js for seamless website generation and deployment.
+- **Tailwind CSS Styling:** Enhance your website's appearance with the flexibility of Tailwind CSS.
 
 ## Getting Started
 
