@@ -1,5 +1,6 @@
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 interface Provider {
   id: string;
@@ -47,14 +48,21 @@ const Login = () => {
         <>
           {providers &&
             Object.values(providers).map((provider) => (
+              // <button
+              //
+              //   className="black_btn text-white font-semibold"
+              // >
+              //   Sign in
+              // </button>
               <button
                 key={provider.name}
                 onClick={() => {
                   signIn(provider.id);
                 }}
-                className="black_btn text-white font-semibold"
+                className="flex hover:-translate-y-1 hover:shadow-slate-100 shadow-md transition ease-in-out duration-200 items-center gap-4 border-2 rounded-md px-6 py-2"
               >
-                Sign in
+                <FcGoogle className="w-10 h-10" />
+                <span>SIGN IN WITH GOOGLE</span>
               </button>
             ))}
         </>

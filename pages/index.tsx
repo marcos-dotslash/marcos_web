@@ -1,19 +1,20 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import Login from "@/components/Login";
 import MyModal from "@/components/MyModal";
 import Component from "@/components/Component.jsx";
 import toast, { Toaster } from "react-hot-toast";
-
+import homeImg from "@/public/home.png";
+import { FcGoogle } from "react-icons/fc";
 import Preview from "../components/preview";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Session } from "inspector";
 import { useSession } from "next-auth/react";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Poppins({ weight: "500", subsets: ["latin"] });
 
 interface Code {
   _id: string;
@@ -92,7 +93,7 @@ export default function Home(req: any) {
       <main className={`${inter.className}`}>
         <Toaster />
         <div className="w-full flex justify-center mt-5">
-          <Login />
+          {session?.user && <Login />}
         </div>
         {session?.user && (
           <div>
@@ -124,9 +125,27 @@ export default function Home(req: any) {
             />
           </div>
         )}
-        {!session?.user && <>
-          
-        </>}
+        {!session?.user && (
+          <>
+            <div className="flex flex-col items-center justify-center">
+              <div className="mt-10">
+                <p className="text-2xl font-semibold tracking-wide">
+                  WEBISY - One Stop to fullfill all your UI needs
+                </p>
+              </div>
+              <div>
+                <Image src={homeImg} alt="IMAGE" />
+              </div>
+              <div>
+                {/* <button className="flex hover:-translate-y-1 hover:shadow-slate-100 shadow-md transition ease-in-out duration-200 items-center gap-4 border-2 rounded-md px-6 py-2">
+                  <FcGoogle className="w-10 h-10" />
+                  <span>SIGN IN WITH GOOGLE</span>
+                </button> */}
+                <Login />
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </>
   );

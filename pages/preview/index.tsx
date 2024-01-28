@@ -84,7 +84,7 @@ const index = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "export.zip";
+    link.download = "code.zip";
 
     // Trigger a click on the link to start the download
     link.click();
