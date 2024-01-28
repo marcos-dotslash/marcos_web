@@ -1,18 +1,14 @@
-let currentSlide = 0;
+const id = "123abc456";
 
-function nextSlide() {
-  currentSlide = (currentSlide + 1) % 3;
-  updateSlider();
-}
+const transformedId = id
+  .split("")
+  .map((ch, index) => {
+    if (ch >= "0" && ch <= "9") {
+      ch = (parseInt(ch) + 10).toString(); // Convert to number, add 10, and convert back to string
+      ch += "a"; // Append "a" to the string
+    }
+    return ch;
+  })
+  .join("");
 
-function prevSlide() {
-  currentSlide = (currentSlide - 1 + 3) % 3;
-  updateSlider();
-}
-
-function updateSlider() {
-  const slides = document.querySelector(".slides");
-  const slideWidth = document.querySelector(".slide").clientWidth;
-
-  slides.style.transform = `translateX(${-currentSlide * slideWidth}px)`;
-}
+console.log(transformedId);

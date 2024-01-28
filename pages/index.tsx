@@ -3,11 +3,13 @@ import { Inter } from "next/font/google";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import Login from "@/components/Login";
-import Modal from "react-modal";
+import MyModal from "@/components/MyModal";
 import Component from "@/components/Component.jsx";
 import toast, { Toaster } from "react-hot-toast";
 
-import Preview from "../components/preview"
+import Preview from "../components/preview";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,31 +20,19 @@ interface Code {
   js: string;
 }
 
-export default function Home(req:any) {
-
-  
+export default function Home(req: any) {
   const [codes, setCodes] = useState<Code[]>([]);
   const [allComps, setAllComps] = useState<Code[]>([]);
-  const [showPreview , setShowPreview] = useState(false)
-  const [selectedCodeIndex, setSelectedCodeIndex] = useState<number | null>(
-    null
-  );
+  // const [showPreview, setShowPreview] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState<string[]>([
-    "navbar",
-    "footer",
-    "card",
-    "slider",
-  ]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const changeCodes = (
     newHtml: string,
     newCss: string,
     newJs: string,
     index: number,
-    _id:string
-
+    _id: string
   ) => {
     setCodes((prev) => {
       console.log(index);
@@ -56,18 +46,6 @@ export default function Home(req:any) {
     });
   };
 
-  const customModalStyles = {
-    content: {
-      backgroundColor: "black",
-      color: "white",
-      padding: "20px",
-      maxWidth: "80%", // Adjust the maximum width as needed
-      margin: "auto",
-    },
-    overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the transparency if needed
-    },
-  };
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (codes.length > 0) {
@@ -84,29 +62,6 @@ export default function Home(req:any) {
     };
   }, [codes]); // Include codes in the dependency array
 
-  const fetchComponentsByCategory = (index: number) => {
-    // Fetch components based on the selected category
-    console.log(categories[index]);
-    const data = { catagory: categories[index] };
-    axios
-      .post("api/crud/read_component", data)
-      .then(function (response: any) {
-        const { components } = response.data;
-        console.log(components);
-        setAllComps(components);
-        setSelectedCategory(categories[index]);
-      })
-      .catch(function (error: any) {
-        console.log(error);
-      });
-  };
-
-  const openModal = (index: number) => {
-    setSelectedCodeIndex(index);
-    fetchComponentsByCategory(index);
-    setIsModalOpen(true);
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -115,100 +70,54 @@ export default function Home(req:any) {
     setCodes(code);
   };
   // console.log(codes);
+  const router = useRouter();
+  const handlePreview = () => {
+    // setShowPreview(true);
+    localStorage.setItem("codes", JSON.stringify(codes));
+    if (codes.length <= 0) {
+      return toast.error("Select atleast one component to preview", {
+        position: "bottom-center",
+        style: { maxWidth: "800px" },
+      });
+    }
+    router.push("/preview");
+  };
 
   return (
     <>
-    {!showPreview &&
       <main className={`${inter.className}`}>
-      <Toaster />
-      <div className="w-full flex justify-center mt-5">
-        <Login />
-      </div>
-      <div className="flex justify-center pt-5">
-      <button
-          onClick={() => setShowPreview(true)}
-          className="my-5 px-4 font-semibold text-lg bg-green-500 p-2 rounded-md text-center mx-2 cursor-pointer"
-        >
-           Preview
-        </button>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="my-5 px-4 font-semibold text-lg bg-green-500 p-2 rounded-md text-center mx-2 cursor-pointer"
-        >
-          {isModalOpen ? "Close" : "Add"}
-        </button>
-      </div>
-      <Component
-        components={codes}
-        changeComponents={changeComponents}
-        changeCodes={changeCodes}
-      />
-
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        style={customModalStyles}
-      >
-        <div className="flex flex-wrap justify-center">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="my-5 bg-blue-500 p-2 rounded-md text-center mx-2 cursor-pointer"
-              onClick={() => openModal(index)}
-            >
-              {category}
-            </div>
-          ))}
+        <Toaster />
+        <div className="w-full flex justify-center mt-5">
+          <Login />
         </div>
-        <div className="absolute left-[90%] top-5 flex justify-center mt-5">
-          <button onClick={closeModal} className="p-2 rounded-md bg-red-500">
-            Close
+        <div className="flex justify-center pt-5">
+          <div onClick={handlePreview}>
+            <button className="px-6 py-1 mr-2 border-2 border-green-500 text-green-500 rounded-md cursor-pointer hover:bg-green-500 hover:text-white">
+              Preview
+            </button>
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-6 py-1 border-2 ml-2 border-blue-500 text-blue-500 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white"
+          >
+            {isModalOpen ? "Close" : "Add"}
           </button>
         </div>
-        {selectedCategory && (
-          <>
-            <div className="text-white mb-3">
-              Components under selected category:
-            </div>
-            {allComps.map((code, index) => (
-              <div key={index} className="px-5">
-                <div>
-                  <iframe
-                    className="w-[70vw] h-[70vh]"
-                    srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body><script>${code.js}</script></html>`}
-                  ></iframe>
-                </div>
-                <div className="mb-5 flex justify-center">
-                  <button
-                    onClick={() => {
-                      toast.success("Component added successfully");
-                      setCodes((prevCode) => {
-                        const newCode: Code = {
-                          _id: code._id,
-                          html: code.html,
-                          css: code.css,
-                          js: code.js,
-                        };
-                        return [...prevCode, newCode];
-                      });
-                    }}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                  >
-                    Choose
-                  </button>
-                </div>
-                <hr className="bg-white" />
-              </div>
-            ))}
-          </>
-        )}
-      </Modal>
-
-    </main>
-}
-    {showPreview && <Preview codes={codes}/>}
-
+        <Component
+          components={codes}
+          changeComponents={changeComponents}
+          changeCodes={changeCodes}
+        />
+        <MyModal
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
+          setCodes={setCodes}
+          allComps={allComps}
+          setAllComps={setAllComps}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </main>
+      {/* {showPreview && <Preview />} */}
     </>
-
   );
 }

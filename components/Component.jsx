@@ -29,7 +29,6 @@ const Component = (props) => {
     });
   };
 
-  
   const setCssCode = (value) => {
     setCss((prev) => {
       props.changeCodes(html, value, js, indexComponent);
@@ -87,7 +86,6 @@ const Component = (props) => {
           <div key={index} className="my-5 p-5">
             <div className="cursor-pointer flex justify-center items-center">
               <iframe
-                // className="object-contain w-full h-full"
                 className="object-contain w-[88vw] h-[88vh]"
                 srcDoc={`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${code.css}</style></head><body>${code.html}</body>
               <script>${code.js}</script></html>`}
@@ -98,13 +96,13 @@ const Component = (props) => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => moveElementUp(index)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="px-6 py-1 border-2 ml-2 border-blue-500 text-blue-500 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white"
                 >
                   Move Up
                 </button>
                 <button
                   onClick={() => moveElementDown(index)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="px-6 py-1 border-2 ml-2 border-blue-500 text-blue-500 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white"
                 >
                   Move Down
                 </button>
@@ -118,13 +116,13 @@ const Component = (props) => {
                     setShow("visible");
                     setIndexComponent(index);
                   }}
-                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  className="px-6 py-1 border-2 ml-2 border-green-500 text-green-500 rounded-md cursor-pointer hover:bg-green-500 hover:text-white"
                 >
                   Code
                 </button>
                 <button
                   onClick={() => deleteElement(index)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="px-6 py-1 border-2 ml-2 border-red-500 text-red-500 rounded-md cursor-pointer hover:bg-red-500 hover:text-white"
                 >
                   Delete
                 </button>

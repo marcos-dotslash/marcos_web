@@ -12,7 +12,7 @@ const Editor = ({ value, setEditorState }) => {
   const [theme, setTheme] = useState("abcdef");
 
   const handleChange = (value) => {
-    console.log(value);
+    // console.log(value);
     setEditorState(value);
   };
 
