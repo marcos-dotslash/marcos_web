@@ -10,6 +10,8 @@ import toast, { Toaster } from "react-hot-toast";
 import Preview from "../components/preview";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Session } from "inspector";
+import { useSession } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +25,8 @@ interface Code {
 export default function Home(req: any) {
   const [codes, setCodes] = useState<Code[]>([]);
   const [allComps, setAllComps] = useState<Code[]>([]);
+  const { data: session } = useSession();
+
   // const [showPreview, setShowPreview] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,34 +94,40 @@ export default function Home(req: any) {
         <div className="w-full flex justify-center mt-5">
           <Login />
         </div>
-        <div className="flex justify-center pt-5">
-          <div onClick={handlePreview}>
-            <button className="px-6 py-1 mr-2 border-2 border-green-500 text-green-500 rounded-md cursor-pointer hover:bg-green-500 hover:text-white">
-              Preview
-            </button>
+        {session?.user && (
+          <div>
+            <div className="flex justify-center pt-5">
+              <div onClick={handlePreview}>
+                <button className="px-6 py-1 mr-2 border-2 border-green-500 text-green-500 rounded-md cursor-pointer hover:bg-green-500 hover:text-white">
+                  Preview
+                </button>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-1 border-2 ml-2 border-blue-500 text-blue-500 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white"
+              >
+                {isModalOpen ? "Close" : "Add Component"}
+              </button>
+            </div>
+            <Component
+              components={codes}
+              changeComponents={changeComponents}
+              changeCodes={changeCodes}
+            />
+            <MyModal
+              isModalOpen={isModalOpen}
+              closeModal={closeModal}
+              setCodes={setCodes}
+              allComps={allComps}
+              setAllComps={setAllComps}
+              setIsModalOpen={setIsModalOpen}
+            />
           </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-6 py-1 border-2 ml-2 border-blue-500 text-blue-500 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white"
-          >
-            {isModalOpen ? "Close" : "Add"}
-          </button>
-        </div>
-        <Component
-          components={codes}
-          changeComponents={changeComponents}
-          changeCodes={changeCodes}
-        />
-        <MyModal
-          isModalOpen={isModalOpen}
-          closeModal={closeModal}
-          setCodes={setCodes}
-          allComps={allComps}
-          setAllComps={setAllComps}
-          setIsModalOpen={setIsModalOpen}
-        />
+        )}
+        {!session?.user && <>
+          
+        </>}
       </main>
-      {/* {showPreview && <Preview />} */}
     </>
   );
 }

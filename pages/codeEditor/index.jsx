@@ -4,17 +4,14 @@ import Editor from "../../components/codeEditor/Editor";
 import React, { useState, useEffect, useRouter, useCallback } from "react";
 
 function App() {
-  
   const [openedEditor, setOpenedEditor] = useState("html");
   const [html, setHtml] = useState("");
   const [css, setCss] = useState("");
   const [js, setJs] = useState("");
   const [srcDoc, setSrcDoc] = useState(` `);
-  
-  
-  const lfun = useCallback(async()=>{
-    const myData =await JSON.parse(data);
-    
+
+  const lfun = useCallback(async () => {
+    const myData = await JSON.parse(data);
 
     myData.map((code, index) => {
       setHtml((prev) => {
@@ -39,20 +36,10 @@ function App() {
         var newJs = prev + code.js;
         return newJs;
       });
-  },[])
-  useEffect(() => {
-    lfun()
-    
-        setSrcDoc(
-          `
-          <html>
-            <body>${html}</body>
-            <style>${css}</style>
-            <script>${js}</script>
-          </html>
-        `
-        );
-      });
+    }, []);
+    useEffect(() => {
+      lfun();
+
       setSrcDoc(
         `
           <html>
@@ -62,7 +49,16 @@ function App() {
           </html>
         `
       );
-
+    });
+    setSrcDoc(
+      `
+          <html>
+            <body>${html}</body>
+            <style>${css}</style>
+            <script>${js}</script>
+          </html>
+        `
+    );
   }, [html, css, js]);
 
   const onTabClick = (editorName) => {

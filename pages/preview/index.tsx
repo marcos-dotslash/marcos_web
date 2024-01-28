@@ -5,6 +5,9 @@ import Editor from "@/components/codeEditor/Editor";
 import Draggable from "react-draggable";
 import Link from "next/link";
 import MyModal from "@/components/MyModal";
+import { useRouter } from "next/navigation";
+import JSZip from "jszip";
+
 interface Code {
   _id: string;
   html: string;
@@ -24,6 +27,7 @@ const index = () => {
   const onTabClick = (editorName: any) => {
     setOpenedEditor(editorName);
   };
+  const router = useRouter();
 
   const [codes, setCodes] = useState([]);
   useEffect(() => {
@@ -54,11 +58,40 @@ const index = () => {
       newJs += code.js;
     });
 
-    newHtml += "<body>";
     setHtml(newHtml);
     setCss(newCss);
     setJs(newJs);
   }, [codes]);
+
+  const handleExport = async () => {
+    const zip = new JSZip();
+
+    let tempHtml = html;
+    tempHtml =
+      '<head><link rel="stylesheet" type="text/css" href="styles.css"><script src="script.js"></script></head>' +
+      tempHtml;
+    zip.file("index.html", tempHtml);
+
+    // CSS code
+    zip.file("styles.css", css);
+
+    // JS code
+    zip.file("script.js", js);
+
+    const blob = await zip.generateAsync({ type: "blob" });
+
+    // Create a link to download the blob
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "export.zip";
+
+    // Trigger a click on the link to start the download
+    link.click();
+
+    // Redirect back to the home page or any other desired page
+    router.push("/");
+  };
   return (
     <>
       <div className="App">
@@ -82,13 +115,21 @@ const index = () => {
                     <span>.</span>
                     <span>.</span>
                   </div>
-                  <div
-                    className="absolute right-0 cursor-pointer px-6 py-1 border-2 border-gray-300 rounded-md"
-                    onClick={() => {
-                      setShow("hidden");
-                    }}
-                  >
-                    Close
+                  <div className="absolute right-0 flex gap-2">
+                    <div
+                      className="cursor-pointer px-6 py-1 border-2 border-gray-300 rounded-md"
+                      onClick={() => {
+                        setShow("hidden");
+                      }}
+                    >
+                      Close
+                    </div>
+                    <div
+                      className="cursor-pointer px-6 py-1 border-2 border-gray-300 rounded-md"
+                      onClick={handleExport}
+                    >
+                      Export
+                    </div>
                   </div>
                 </div>
                 <div className={` flex flex-col`}>
